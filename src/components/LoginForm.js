@@ -1,12 +1,5 @@
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TextInput,
-  ToastAndroid,
-} from 'react-native';
+import {StyleSheet, View, TextInput, ToastAndroid} from 'react-native';
 import TouchableText from './TouchableText';
 import {validateEmail} from '../utils/validations';
 import firebase from '../utils/firebase';
@@ -26,12 +19,24 @@ export default function LoginForm(props) {
       if (!formData.password) {
         errors.password = true;
       }
+      ToastAndroid.show(
+        'Por favor, complete todos los campos.',
+        ToastAndroid.SHORT,
+      );
     }
     if (!validateEmail(formData.email)) {
       errors.email = true;
+      ToastAndroid.show(
+        'Por favor, ingrese un correo válido',
+        ToastAndroid.SHORT,
+      );
     }
     if (formData.password.length < 6) {
       errors.password = true;
+      ToastAndroid.show(
+        'La contraseña debe debe tener al menos 6 caracteres.',
+        ToastAndroid.SHORT,
+      );
     }
     if (!errors.empty) {
       firebase

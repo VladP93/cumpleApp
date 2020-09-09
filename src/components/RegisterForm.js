@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, TextInput} from 'react-native';
+import {StyleSheet, View, TextInput, ToastAndroid} from 'react-native';
 import {validateEmail} from '../utils/validations';
 import TouchableText from './TouchableText';
 
@@ -23,18 +23,32 @@ export default function RegisterForm(props) {
       if (!formData.repeatPassword) {
         errors.repeatPassword = true;
       }
+      ToastAndroid.show(
+        'Por favor, complete todos los campos.',
+        ToastAndroid.SHORT,
+      );
     }
     if (!validateEmail(formData.email)) {
       errors.email = true;
+      ToastAndroid.show(
+        'Por favor, ingrese un correo válido.',
+        ToastAndroid.SHORT,
+      );
     }
-    if (
-      formData.password !== formData.repeatPassword ||
-      formData.password.length < 6 ||
-      formData.repeatPassword.length < 6
-    ) {
+
+    if (formData.password !== formData.repeatPassword) {
       errors.password = true;
       errors.repeatPassword = true;
+      ToastAndroid.show('Las contraseñas no coinciden.', ToastAndroid.SHORT);
+    } else if (formData.password.length < 6) {
+      errors.password = true;
+      errors.repeatPassword = true;
+      ToastAndroid.show(
+        'La contraseña debe de tener al menos 6 caracteres',
+        ToastAndroid.SHORT,
+      );
     }
+
     if (!errors.empty) {
       firebase
         .auth()
@@ -43,7 +57,7 @@ export default function RegisterForm(props) {
           ToastAndroid.show('Cuenta registrada', ToastAndroid.SHORT);
         })
         .catch((err) => {
-          console.log(err);
+          ToastAndroid.show(`Error: ${err.message}`, ToastAndroid.SHORT);
         });
     }
 
