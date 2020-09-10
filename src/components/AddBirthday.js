@@ -11,7 +11,7 @@ firebase.firestore().settings({experimentalForceLongPolling: true});
 const db = firebase.firestore(firebase);
 
 export default function AddBirthday(props) {
-  const {user, setShowList} = props;
+  const {user, setShowList, setReloadData} = props;
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [formData, setFormData] = useState(defaultValue);
   const [formError, setFormError] = useState({});
@@ -63,6 +63,7 @@ export default function AddBirthday(props) {
             `El cumpleaños de ${data.name} se agregó`,
             ToastAndroid.SHORT,
           );
+          setReloadData(true);
           setShowList(true);
         })
         .catch((err) => {
